@@ -2,7 +2,6 @@ package ar.com.avillucas.tpfinaltusi.model;
 
 import java.io.Serializable;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +32,6 @@ public class Obra implements Serializable {
 	@Column(name = "descripcion")
 	private String descripcion;
 
-	@NotBlank
 	@Min(1)
 	@Column(name = "precio")
 	private Float precio;

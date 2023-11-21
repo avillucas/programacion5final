@@ -36,7 +36,7 @@ public class ArtistaMapper {
 		dto.setId(entity.getId());
 		dto.setNombre(entity.getNombre());
 		dto.setApellido(entity.getApellido());
-		dto.setDni(dto.getDni());
+		dto.setDni(entity.getDni());
 		dto.setObras(new ArrayList<ObraDTO>());
 
 		if (entity.getObras() != null) {

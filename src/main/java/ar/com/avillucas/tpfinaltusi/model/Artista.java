@@ -3,6 +3,8 @@ package ar.com.avillucas.tpfinaltusi.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "artistas")
@@ -32,7 +35,8 @@ public class Artista implements Serializable {
 	@Column(name = "apellido")
 	private String apellido;
 
-	@NotBlank
+	@Min(5)
+	//TODO validar el unique  ya sea acá o mas atras
 	@Column(name = "dni")
 	private Long dni;
 

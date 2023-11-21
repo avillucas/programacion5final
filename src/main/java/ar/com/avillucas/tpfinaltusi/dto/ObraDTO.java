@@ -13,7 +13,6 @@ public class ObraDTO {
 
 	private String descripcion;
 
-	@NotBlank
 	@Min(1)
 	private Float precio;
 

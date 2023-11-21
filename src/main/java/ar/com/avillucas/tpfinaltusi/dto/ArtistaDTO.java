@@ -14,7 +14,6 @@ public class ArtistaDTO {
 	@NotBlank
 	private String apellido;
 
-	@NotBlank
 	@Column(name = "dni")
 	private Long dni;
 

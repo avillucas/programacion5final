@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +31,18 @@ public class ObraController {
 	@Autowired
 	ObraMapper obraMapper;
 
+	
+	@GetMapping("/")
+	public ResponseEntity<?> traerObras() {
+		List<Obra> entities = obraRepository.findAll();
+		if (entities.size() > 0) {
+			List<ObraDTO> listDTO = obraMapper.entityToDTO(entities);
+			return new ResponseEntity<List<ObraDTO>>(listDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("No se encontraron obras", HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	@GetMapping("/artista/{nombre}")
 	public ResponseEntity<?> traerObraYHabilidadesPorNombre(@PathVariable String nombre) {
 		try {
@@ -64,7 +77,11 @@ public class ObraController {
 		}
 	}
 
-	@PostMapping("/")
+	@PostMapping(
+			path = "/", 
+			consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+			produces = {MediaType.APPLICATION_JSON_VALUE }
+			)
 	public ResponseEntity<?> crearObra(@RequestBody @Validated ObraDTO dto) {
 		try {
 			Obra p = obraMapper.DTOToEntity(dto);
@@ -75,8 +92,12 @@ public class ObraController {
 			return new ResponseEntity<String>("No se pudo guardar : " + e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-
-	@PutMapping("/")
+	
+	@PutMapping(
+			path = "/", 
+			consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+			produces = {MediaType.APPLICATION_JSON_VALUE }
+			)
 	public ResponseEntity<?> modificarObra(@RequestBody @Validated ObraDTO dto) {
 		Optional<Obra> entityOpt = obraRepository.findById(dto.getId());
 

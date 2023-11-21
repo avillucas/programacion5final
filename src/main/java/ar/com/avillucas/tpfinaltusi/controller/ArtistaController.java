@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,11 +31,22 @@ public class ArtistaController {
 	@Autowired
 	ArtistaMapper artistaMapper;
 
+	@GetMapping("/")
+	public ResponseEntity<?> traerArtistas() {
+		List<Artista> entities = artistaRepository.findAll();
+		if (entities.size() > 0) {
+			List<ArtistaDTO> listDTO = artistaMapper.entityToDTO(entities);
+			return new ResponseEntity<List<ArtistaDTO>>(listDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Artista no encontrado artistas", HttpStatus.NOT_FOUND);
+		}
+	}
+
 	@GetMapping("/nombre/{nombre}")
 	public ResponseEntity<?> traerArtistaYHabilidadesPorNombre(@PathVariable String nombre) {
 		try {
-			List<Artista> entity = artistaRepository.findAllByNombre(nombre);
-			List<ArtistaDTO> listDTO = artistaMapper.entityToDTO(entity);
+			List<Artista> entities = artistaRepository.findAllByNombre(nombre);
+			List<ArtistaDTO> listDTO = artistaMapper.entityToDTO(entities);
 			return new ResponseEntity<List<ArtistaDTO>>(listDTO, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("Artista no encontrado con nombre " + nombre, HttpStatus.CONFLICT);
@@ -52,11 +64,15 @@ public class ArtistaController {
 		}
 	}
 
-	@PostMapping("/")
+	@PostMapping(
+			path = "/", 
+			consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+			produces = {MediaType.APPLICATION_JSON_VALUE }
+			)
+
 	public ResponseEntity<?> crearArtista(@RequestBody @Validated ArtistaDTO dto) {
 		try {
 			Artista p = artistaMapper.DTOToEntity(dto);
-
 			artistaRepository.save(p);
 			return new ResponseEntity<String>("Guardado correctamente", HttpStatus.OK);
 		} catch (Exception e) {

@@ -3,11 +3,14 @@ package ar.com.avillucas.tpfinaltusi.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import ar.com.avillucas.tpfinaltusi.model.Artista;
 import ar.com.avillucas.tpfinaltusi.model.Obra;
 import java.util.List;
 
 @Repository
 public interface ObraRepository extends CrudRepository<Obra, Long> {
+	List<Obra> findAll();
 
 	List<Obra> findAllByNombre(String nombre);
 
