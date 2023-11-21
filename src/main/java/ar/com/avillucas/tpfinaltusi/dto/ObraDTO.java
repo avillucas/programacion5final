@@ -2,7 +2,6 @@ package ar.com.avillucas.tpfinaltusi.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public class ObraDTO {
 
@@ -16,7 +15,6 @@ public class ObraDTO {
 	@Min(1)
 	private Float precio;
 
-	@NotNull
 	public ArtistaDTO artista;
 
 	public Long getId() {

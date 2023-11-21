@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import ar.com.avillucas.tpfinaltusi.dto.ArtistaMapper;
 import ar.com.avillucas.tpfinaltusi.dto.ObraDTO;
 import ar.com.avillucas.tpfinaltusi.dto.ObraMapper;
+import ar.com.avillucas.tpfinaltusi.model.Artista;
 import ar.com.avillucas.tpfinaltusi.model.Obra;
+import ar.com.avillucas.tpfinaltusi.repository.ArtistaRepository;
 import ar.com.avillucas.tpfinaltusi.repository.ObraRepository;
 
 @RestController
@@ -29,9 +33,15 @@ public class ObraController {
 	ObraRepository obraRepository;
 
 	@Autowired
-	ObraMapper obraMapper;
+	ArtistaRepository artistaRepository;
+
+	@Autowired
+	ArtistaMapper artistaMapper;
 
 	
+	@Autowired
+	ObraMapper obraMapper;
+
 	@GetMapping("/")
 	public ResponseEntity<?> traerObras() {
 		List<Obra> entities = obraRepository.findAll();
@@ -42,7 +52,7 @@ public class ObraController {
 			return new ResponseEntity<String>("No se encontraron obras", HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@GetMapping("/artista/{nombre}")
 	public ResponseEntity<?> traerObraYHabilidadesPorNombre(@PathVariable String nombre) {
 		try {
@@ -69,57 +79,54 @@ public class ObraController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> traerObra(@PathVariable Long id) {
 		Optional<Obra> entityOpt = obraRepository.findById(id);
-		if (entityOpt.isPresent()) {
-			ObraDTO dto = obraMapper.entityToDTO(entityOpt.get());
-			return new ResponseEntity<ObraDTO>(dto, HttpStatus.OK);
-		} else {
+		if (!entityOpt.isPresent()) {
 			return new ResponseEntity<String>("Obra no encontrado en id = " + id, HttpStatus.CONFLICT);
 		}
+		ObraDTO dto = obraMapper.entityToDTO(entityOpt.get());
+		return new ResponseEntity<ObraDTO>(dto, HttpStatus.OK);
 	}
 
-	@PostMapping(
-			path = "/", 
-			consumes = { MediaType.APPLICATION_JSON_VALUE }, 
-			produces = {MediaType.APPLICATION_JSON_VALUE }
-			)
-	public ResponseEntity<?> crearObra(@RequestBody @Validated ObraDTO dto) {
+	@PostMapping(path = "/{artistaId}/", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<?> crearObra(@PathVariable Long artistaId, @RequestBody @Validated ObraDTO dto) {
 		try {
+			Optional<Artista> artistaOpt = artistaRepository.findById(artistaId);
+			if (!artistaOpt.isPresent()) {
+				throw new Exception("No existe el artista id:" + artistaId);
+			}
+			Artista artista = artistaOpt.get();
+			//
 			Obra p = obraMapper.DTOToEntity(dto);
-
-			obraRepository.save(p);
+			p.artista = artista;
+			this.obraRepository.save(p);
 			return new ResponseEntity<String>("Guardado correctamente", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("No se pudo guardar : " + e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	@PutMapping(
-			path = "/", 
-			consumes = { MediaType.APPLICATION_JSON_VALUE }, 
-			produces = {MediaType.APPLICATION_JSON_VALUE }
-			)
+
+	@PutMapping(path = "/", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> modificarObra(@RequestBody @Validated ObraDTO dto) {
 		Optional<Obra> entityOpt = obraRepository.findById(dto.getId());
-
-		if (entityOpt.isPresent()) {
-			Obra p = obraMapper.DTOToEntity(dto);
-			obraRepository.save(p);
-			return new ResponseEntity<String>("Modificado correctamente", HttpStatus.OK);
-		} else {
+		if (!entityOpt.isPresent()) {
 			return new ResponseEntity<String>("Obra no encontrado con id " + dto.getId(), HttpStatus.CONFLICT);
 		}
+		Obra p = obraMapper.DTOToEntity(dto);
+		obraRepository.save(p);
+		return new ResponseEntity<String>("Modificado correctamente", HttpStatus.OK);
+
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> eliminarObra(@PathVariable Long id) {
 		try {
 			Optional<Obra> entityOpt = obraRepository.findById(id);
-			if (entityOpt.isPresent()) {
-				obraRepository.delete(entityOpt.get());
-				return new ResponseEntity<String>("Borrado correctamente", HttpStatus.OK);
-			} else {
+			if (!entityOpt.isPresent()) {
 				return new ResponseEntity<String>("Obra no encontrado con id: " + id, HttpStatus.CONFLICT);
 			}
+			obraRepository.delete(entityOpt.get());
+			return new ResponseEntity<String>("Borrado correctamente", HttpStatus.OK);
 
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<String>("No se pudo borrar", HttpStatus.CONFLICT);

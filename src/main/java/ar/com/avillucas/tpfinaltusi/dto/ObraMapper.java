@@ -9,6 +9,7 @@ import ar.com.avillucas.tpfinaltusi.model.Obra;
 @Component
 public class ObraMapper {
 
+
 	public ObraDTO entityToDTO(Obra entity) {
 		ObraDTO dto = new ObraDTO();
 		dto.setNombre(entity.getNombre());
@@ -22,7 +23,7 @@ public class ObraMapper {
 		Obra entity = new Obra();
 		entity.setNombre(dto.getNombre());
 		entity.setPrecio(dto.getPrecio());
-		entity.setDescripcion(entity.getDescripcion());
+		entity.setDescripcion(dto.getDescripcion());
 		entity.setId(dto.getId());
 		return entity;
 	}
