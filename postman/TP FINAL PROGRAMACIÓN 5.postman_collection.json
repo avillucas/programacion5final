@@ -96,7 +96,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nombre\":\"Tester\",\n    \"apellido\":\"Tester\",\n    \"dni\":31256478,\n    \"obras\":[\n        {\n            \"nombre\":\"LA OBRA 1 \",\n            \"descripcion\":\"La mejor obra 1\",\n            \"precio\":1222.20\n        },\n\n        {\n            \"nombre\":\"LA OBRA 2 \",\n            \"descripcion\":\"La mejor obra 2\",\n            \"precio\":1223\n        }\n    ]\n}",
+							"raw": "{\n    \"nombre\":\"Tester\",\n    \"apellido\":\"Tester\",\n    \"dni\":31256478\n    \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -178,7 +178,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/obra/1",
+							"raw": "localhost:8080/api/obra/3",
 							"host": [
 								"localhost"
 							],
@@ -186,7 +186,7 @@
 							"path": [
 								"api",
 								"obra",
-								"1"
+								"3"
 							]
 						}
 					},
@@ -234,13 +234,13 @@
 					"response": []
 				},
 				{
-					"name": "Crear Artista",
+					"name": "Crear Obra de artista",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"mombre\":\"LA OBRA 1 \",\n    \"descripcion\":\"La mejor obra 1\",\n    \"precio\":1222.20\n}",
+							"raw": "{\n    \"nombre\":\"LA OBRA 1 \",\n    \"descripcion\":\"La mejor obra 1\",\n    \"precio\":1222.20\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -248,7 +248,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/obra/",
+							"raw": "localhost:8080/api/obra/2/",
 							"host": [
 								"localhost"
 							],
@@ -256,6 +256,7 @@
 							"path": [
 								"api",
 								"obra",
+								"2",
 								""
 							]
 						}
@@ -292,12 +293,12 @@
 					"response": []
 				},
 				{
-					"name": "Traer obra por nombre",
+					"name": "Traer obra por nombre de artista",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/obra/nombre/la obra",
+							"raw": "localhost:8080/api/obra/artista/tester",
 							"host": [
 								"localhost"
 							],
@@ -305,8 +306,8 @@
 							"path": [
 								"api",
 								"obra",
-								"nombre",
-								"la obra"
+								"artista",
+								"tester"
 							]
 						}
 					},
